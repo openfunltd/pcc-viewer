@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>標案瀏覽</title>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.2.2/bootstrap.min.js"></script>
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.2.2/css/bootstrap.css">
+</head>
+<body>
+<div class="navbar">
+    <div class="navbar-inner">
+        <a class="brand" href="index.html">標案瀏覽</a>
+        <ul class="nav">
+            <li>
+            <a href="index.html">首頁</a>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="row-fluid">
+        <h1>機關名稱：<span id="unit"></span></h1>
+        API:<code id="api-url"></code>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>日期</th>
+                    <th>類型</th>
+                    <th>代碼</th>
+                    <th>標案名稱</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div><!-- .row-fluid -->
+</div><!-- .container -->
+<script>
+var unit_id = document.location.search.match(/unit_id=([^&]*)/)[1];
+$('#api-url').text('https://pcc.g0v.ronny.tw/api/listbyunit?unit_id=' + unit_id);
+$.get('https://pcc.g0v.ronny.tw/api/listbyunit?unit_id=' + unit_id, function(ret){
+  $('#unit').text(ret.unit_name);
+  for (var i = 0; i < ret.records.length; i ++) {
+    var record = ret.records[i];
+    var tr_dom = $('<tr></tr>');
+    tr_dom.append($('<td></td>').text(record.date));
+    tr_dom.append($('<td></td>').text(record.brief.type));
+    tr_dom.append($('<td></td>').text(record.job_number));
+    tr_dom.append($('<td></td>').append($('<a></a>').attr('href', 'tender.html?unit_id=' + record.unit_id + '&job_number=' + encodeURIComponent(record.job_number)).text(record.brief.title)));
+    $('tbody').append(tr_dom);
+  }
+}, 'json');
+</script>
+</body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>標案瀏覽</title>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.2.2/bootstrap.min.js"></script>
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.2.2/css/bootstrap.css">
+</head>
+<body>
+<div class="navbar">
+    <div class="navbar-inner">
+        <a class="brand" href="/">標案瀏覽</a>
+        <ul class="nav">
+            <li>
+            <a href="/">首頁</a>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="row-fluid">
+<h1>標案資料瀏覽</h1>
+<p>
+這邊的目標是要把 <a href="https://web.pcc.gov.tw">中華民國政府電子採購網</a> 的資料，能夠以更簡潔方便的方式顯示，以便更容易讓政府採購的資料產生價值。
+</p>
+<h1>使用方式</h1>
+<ul>
+    <li>可以透過日期瀏覽當日所有公告，Ex：<a href="date.html?date=20171101">2017/11/1</a></li>
+    <li>可以透過機關瀏覽所有標案，Ex：<a href="unit.html?unit_id=A.27">科技部</a></li>
+    <li>可以瀏覽標案內容，Ex：<a href="tender.html?unit_id=3.79&job_number=1050204S0015">智慧支付整合平台建置委外服務採購案</a></li>
+    <li>
+    <form method="get" action="search.html">
+        依關鍵字搜尋：<input type="type" name="query" placeholder="輸入關鍵字">
+        <button type="submit">搜尋</button>
+    </form>
+    </li>
+    <li>
+    <form method="get" action="searchbycompany.html">
+        依公司名稱搜尋：<input type="type" name="query" placeholder="輸入公司名稱">
+        <button type="submit">搜尋</button>
+    </form>
+    </li>
+</ul>
+<h1>資料情況</h1>
+<ul id="status">
+    <li>API: <code>https://pcc.g0v.ronny.tw/api/getinfo</code></li>
+</ul>
+
+</div><!-- .row-fluid -->
+</div><!-- .container -->
+<script>
+$.get('https://pcc.g0v.ronny.tw/api/getinfo', function(r){
+        for (var key in r) {
+            if (key.match('時間')) {
+                var d = new Date(r[key]);
+                var yyyymmdd = d.getFullYear() + ('00' + (d.getMonth() + 1)).slice(-2) + ('00' + d.getDate()).slice(-2);
+                $('#status').append($('<li></li').text(key + '：').append($('<a></a>').attr('href', 'date.html?date=' + yyyymmdd).text(yyyymmdd)));
+            } else {
+                $('#status').append($('<li></li').text(key + '：' + r[key]));
+            }
+        }
+}, 'json');
+</script>
+</body>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>標案瀏覽</title>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.2.2/bootstrap.min.js"></script>
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.2.2/css/bootstrap.css">
+</head>
+<body>
+<div class="navbar">
+    <div class="navbar-inner">
+        <a class="brand" href="index.html">標案瀏覽</a>
+        <ul class="nav">
+            <li>
+            <a href="index.html">首頁</a>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="row-fluid">
+        <h1 id="unit_name">機關：</h1>
+        <h2 id="job_number">標案編號：</h2>
+        API:<code id="api-url"></code>
+        <ul id="record-list" class="nav nav-tabs">
+        </ul>
+        <div id="record-tables">
+        </div>
+    </div><!-- .row-fluid -->
+</div><!-- .container -->
+<script>
+var unit_id = document.location.search.match(/unit_id=([^&]*)/)[1];
+var job_number = document.location.search.match(/job_number=([^&]*)/)[1];
+var date = false;
+if (document.location.search.match(/date=([^&]*)/)) {
+    date = document.location.search.match(/date=([^&]*)/)[1];
+}
+var filename = false;
+if (document.location.search.match(/filename=([^&]*)/)) {
+    filename = document.location.search.match(/filename=([^&]*)/)[1];
+}
+
+$('#api-url').text('https://pcc.g0v.ronny.tw/api/tender?unit_id=' + encodeURIComponent(unit_id) + '&job_number=' + encodeURIComponent(job_number));
+$.get('https://pcc.g0v.ronny.tw/api/tender?unit_id=' + encodeURIComponent(unit_id) + '&job_number=' + encodeURIComponent(job_number), function(ret){
+    $('#unit_name').text('機關：' + ret.unit_name);
+    $('#job_number').text('標案編號：' + job_number);
+    for (var i = 0; i < ret.records.length; i ++) {
+        var record = ret.records[i];
+        var url = 'tender.html?' + [
+            'unit_id=' + encodeURIComponent(unit_id),
+            'job_number=' + encodeURIComponent(job_number),
+            'date=' + encodeURIComponent(record.date),
+            'filename=' + encodeURIComponent(record.filename)
+        ].join('&');
+
+        $('#record-list').append($('<li role="presentation"></li>').append(
+            $('<a></a>').attr('href', url).text(record.date + ' ' + record.brief.type).data('id', record.date + record.filename)
+        ).attr('id', 'record-list-' + record.date + record.filename));
+        var dl_dom = $('<dl></dl>').addClass('dl-horizontal').attr('id', 'record-table-' + record.date + record.filename);
+
+        for (var k in record.detail) {
+            dl_dom.append($('<dt></dt>').text(k));
+            dl_dom.append($('<dd></dd>').text(record.detail[k]));
+        }
+        $('#record-tables').append(dl_dom);
+    }
+    $('#record-tables dl').hide();
+
+    if (date && filename) {
+        $('#record-list-' + date + filename).addClass('active');
+        $('#record-table-' + date + filename).show();
+    } else {
+        $('#record-list li:last').addClass('active');
+        $('#record-tables dl:last').show();
+    }
+}, 'json');
+</script>
+</body>
+</html>

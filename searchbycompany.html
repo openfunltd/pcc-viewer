@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>標案瀏覽</title>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.2.2/bootstrap.min.js"></script>
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.2.2/css/bootstrap.css">
+</head>
+<body>
+<div class="navbar">
+    <div class="navbar-inner">
+        <a class="brand" href="index.html">標案瀏覽</a>
+        <ul class="nav">
+            <li>
+            <a href="index.html">首頁</a>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="row-fluid">
+<form method="get" action="searchbycompany.html">
+    搜尋關鍵字: <input type="text" name="query" id="input_query">
+    <button type="submit">搜尋</button>
+</form>
+<div id="message"></div>
+<div>API: <code id="api_url"></code></div>
+
+
+<div class="pagination">
+    <ul></ul>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>日期</th>
+            <th>類別</th>
+            <th>機關</th>
+            <th>標案名稱</th>
+            <th>公司名稱</th>
+            <th>公司欄位</th>
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+<div class="pagination">
+    <ul></ul>
+</div>
+<script>
+var query = document.location.search.match(/query=([^&]*)/)[1];
+query = decodeURIComponent(query);
+var page = 1;
+if (document.location.search.match(/page=([0-9]*)/)) {
+    page = document.location.search.match(/page=([0-9]*)/)[1];
+}
+
+var api_url = 'https://pcc.g0v.ronny.tw/api/searchbycompanyname?query=' + encodeURIComponent(query) + '&page=' + page;
+$('#api_url').text(api_url);
+$.get(api_url, function(ret){
+    $('tbody').html('');
+    $('#message').text('顯示搜尋「' + ret.query + '」結果，共 ' + ret.total_records + ' 筆符合，顯示第 ' + ret.page + ' / ' + ret.total_pages + ' 頁。');
+
+    $('#input_query').val(ret.query);
+    $('.pagination ul').html('');
+    for (var page = 1; page <= ret.total_pages; page ++) {
+        var a_dom = $('<a></a>').attr('href', 'searchbycompany.html?query=' + encodeURIComponent(query) + '&page=' + page).addClass('page-link').text(page);
+        var li_dom = $('<li></li>').addClass('page-item').append(a_dom);
+        if (ret.page == page) {
+            li_dom.addClass('active');
+        }
+
+        $('.pagination ul').append(li_dom);
+    }
+
+
+    for (var i = 0; i < ret.records.length; i ++) {
+        var record = ret.records[i];
+        var tr_dom = $('<tr></tr>');
+        var get_td_dom = function(){
+            var td_dom = $('<td></td>');
+            if (record.brief.companies.names.length > 1) {
+                td_dom.attr('rowspan', record.brief.companies.names.length);
+            }
+            return td_dom;
+        };
+        tr_dom.append(get_td_dom().text(record.date));
+        tr_dom.append(get_td_dom().text(record.brief.type));
+        tr_dom.append(get_td_dom().append($('<a></a>').attr('href', 'unit.html?unit_id=' + record.unit_id).text(record.unit_name)));
+        var tender_url = 'tender.html?' + [
+            'unit_id=' + encodeURIComponent(record.unit_id),
+            'job_number=' + encodeURIComponent(record.job_number),
+            'date=' + encodeURIComponent(record.date),
+            'filename=' + encodeURIComponent(record.filename)
+            ].join('&');
+        tr_dom.append(get_td_dom().append($('<a></a>').attr('href', tender_url).text(record.brief.title)));
+        for (var j = 0; j < record.brief.companies.names.length; j ++) {
+            var name = record.brief.companies.names[j];
+            tr_dom.append($('<td></td>').text(name));
+            var ul_dom = $('<ul></ul>');
+            record.brief.companies.name_key[name].map(function(k) {
+                    var li_dom = $('<li></li>').text(k);
+                    if (k.match(/:得標廠商/)) {
+                        li_dom.css('background-color', 'lightgreen');
+                    } else if (k.match(/:未得標廠商/)) {
+                        li_dom.css('background-color', 'lightpink');
+                    }
+                    ul_dom.append(li_dom);
+            });
+            tr_dom.append($('<td></td>').append(ul_dom));
+            $('tbody').append(tr_dom);
+            tr_dom = $('<tr></tr>');
+        }
+    }
+}, 'json');
+</script>
+</div><!-- .row-fluid -->
+</div><!-- .container -->
+</body>
+</html>
