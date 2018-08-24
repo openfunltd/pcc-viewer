@@ -73,6 +73,8 @@ $.get('https://pcc.g0v.ronny.tw/api/tender?unit_id=' + encodeURIComponent(unit_i
             dl_dom.append($('<dt></dt>').text(k));
             if (k == 'url') {
                 dl_dom.append($('<dd></dd>').append($('<a></a>').attr('href', record.detail[k]).text(record.detail[k])));
+            } else if (!record.detail[k]) {
+                dl_dom.append($('<dd></dd>').text(''));
             } else {
                 dl_dom.append($('<dd></dd>').text(record.detail[k]));
             }
