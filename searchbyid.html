@@ -67,7 +67,7 @@ if (document.location.search.match(/page=([0-9]*)/)) {
     page = document.location.search.match(/page=([0-9]*)/)[1];
 }
 
-var api_url = 'https://pcc.g0v.ronny.tw/api/searchbyid?query=' + encodeURIComponent(query) + '&page=' + page;
+var api_url = 'https://pcc.g0v.ronny.tw/api/searchbycompanyid?query=' + encodeURIComponent(query) + '&page=' + page;
 $('#api_url').text(api_url);
 $.get(api_url, function(ret){
     $('tbody').html('');
