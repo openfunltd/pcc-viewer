@@ -68,7 +68,7 @@
 </ul>
 <h1>資料情況</h1>
 <ul id="status">
-    <li>API: <code>https://pcc.g0v.ronny.tw/api/getinfo</code></li>
+    <li>API: <code id="api_url"></code></li>
 </ul>
 <h1>程式碼及授權</h1>
 <ul>
@@ -87,8 +87,10 @@
 
 </div><!-- .row-fluid -->
 </div><!-- .container -->
+<script src="config.js"></script>
 <script>
-$.get('https://pcc.g0v.ronny.tw/api/getinfo', function(r){
+$('#api_url').html(api_base + '/api/getinfo');
+$.get(api_base + '/api/getinfo', function(r){
         for (var key in r) {
             if (key.match('時間')) {
                 var d = new Date(r[key]);

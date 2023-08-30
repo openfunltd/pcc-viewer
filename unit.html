@@ -47,10 +47,11 @@
         </table>
     </div><!-- .row-fluid -->
 </div><!-- .container -->
+<script src="config.js"></script>
 <script>
 var unit_id = document.location.search.match(/unit_id=([^&]*)/)[1];
-$('#api-url').text('https://pcc.g0v.ronny.tw/api/listbyunit?unit_id=' + unit_id);
-$.get('https://pcc.g0v.ronny.tw/api/listbyunit?unit_id=' + unit_id, function(ret){
+$('#api-url').text(api_base + '/api/listbyunit?unit_id=' + unit_id);
+$.get(api_base + '/api/listbyunit?unit_id=' + unit_id, function(ret){
   $('#unit').text(ret.unit_name);
   for (var i = 0; i < ret.records.length; i ++) {
     var record = ret.records[i];

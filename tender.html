@@ -40,6 +40,7 @@
         </div>
     </div><!-- .row-fluid -->
 </div><!-- .container -->
+<script src="config.js"></script>
 <script>
 var unit_id = document.location.search.match(/unit_id=([^&]*)/)[1];
 var job_number = document.location.search.match(/job_number=([^&]*)/)[1];
@@ -52,8 +53,8 @@ if (document.location.search.match(/filename=([^&]*)/)) {
     filename = document.location.search.match(/filename=([^&]*)/)[1];
 }
 
-$('#api-url').text('https://pcc.g0v.ronny.tw/api/tender?unit_id=' + encodeURIComponent(unit_id) + '&job_number=' + encodeURIComponent(job_number));
-$.get('https://pcc.g0v.ronny.tw/api/tender?unit_id=' + encodeURIComponent(unit_id) + '&job_number=' + encodeURIComponent(job_number), function(ret){
+$('#api-url').text(api_base + '/api/tender?unit_id=' + encodeURIComponent(unit_id) + '&job_number=' + encodeURIComponent(job_number));
+$.get(api_base + '/api/tender?unit_id=' + encodeURIComponent(unit_id) + '&job_number=' + encodeURIComponent(job_number), function(ret){
     $('#unit_name').text('機關：' + ret.unit_name);
     $('#job_number').text('標案編號：' + job_number);
     for (var i = 0; i < ret.records.length; i ++) {

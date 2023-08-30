@@ -51,8 +51,8 @@
 <script>
 var yyyymmdd = document.location.search.match(/date=([0-9]*)/)[1];
 $('#date').text(yyyymmdd);
-$('#api-url').text(api_url + '/api/listbydate?date=' + yyyymmdd);
-$.get(api_url + '/api/listbydate?date=' + yyyymmdd, function(ret){
+$('#api-url').text(api_base + '/api/listbydate?date=' + yyyymmdd);
+$.get(api_base + '/api/listbydate?date=' + yyyymmdd, function(ret){
   for (var i = 0; i < ret.records.length; i ++) {
     var record = ret.records[i];
     var tr_dom = $('<tr></tr>');
