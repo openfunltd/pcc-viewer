@@ -8,4 +8,4 @@
 
 資料使用授權可參考  [https://openfunltd.github.io/pcc-viewer](https://openfunltd.github.io/pcc-viewer) 首頁下方顯示
 
-後端程式碼可以參考 https://github.com/openfunltd/pcc.g0v.ronny.tw/issues
+後端程式碼可以參考 https://github.com/openfunltd/pcc.g0v.ronny.tw/
