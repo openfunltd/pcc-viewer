@@ -89,7 +89,7 @@
 </div><!-- .container -->
 <script src="config.js"></script>
 <script>
-$('#api_url').html(api_base + '/api/getinfo');
+$('#api_url').text(api_base + '/api/getinfo');
 $.get(api_base + '/api/getinfo', function(r){
         for (var key in r) {
             if (key.match('時間')) {
