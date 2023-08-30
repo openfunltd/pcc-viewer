@@ -1,1 +1,1 @@
-const api_url = 'https://pcc.g0v.ronny.tw';
+const api_base = 'https://pcc.g0v.ronny.tw';
