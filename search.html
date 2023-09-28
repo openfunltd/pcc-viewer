@@ -61,6 +61,7 @@
 <script>
 var query = document.location.search.match(/query=([^&]*)/)[1];
 query = decodeURIComponent(query);
+query = query.replace(/\+/g, ' ');
 var page = 1;
 if (document.location.search.match(/page=([0-9]*)/)) {
     page = document.location.search.match(/page=([0-9]*)/)[1];
