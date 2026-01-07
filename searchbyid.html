@@ -78,7 +78,7 @@ $.get(api_url, function(ret){
     $('#input_query').val(ret.query);
     $('.pagination ul').html('');
     for (var page = 1; page <= ret.total_pages; page ++) {
-        var a_dom = $('<a></a>').attr('href', 'searchbycompany.html?query=' + encodeURIComponent(query) + '&page=' + page).addClass('page-link').text(page);
+        var a_dom = $('<a></a>').attr('href', 'searchbyid.html?query=' + encodeURIComponent(query) + '&page=' + page).addClass('page-link').text(page);
         var li_dom = $('<li></li>').addClass('page-item').append(a_dom);
         if (ret.page == page) {
             li_dom.addClass('active');
